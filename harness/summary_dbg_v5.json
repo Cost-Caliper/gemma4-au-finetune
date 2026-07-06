@@ -1,0 +1,25 @@
+{
+  "dbg_v5": {
+    "holdout": {
+      "n": 150,
+      "errors": 0,
+      "key_fact_coverage": 0.4824,
+      "judge_mean": 6.81,
+      "tool_call_rate": 0.98
+    },
+    "retention": {
+      "n": 60,
+      "errors": 0,
+      "key_fact_coverage": 0.5319,
+      "judge_mean": 6.98,
+      "tool_call_rate": 0.95
+    },
+    "code": {
+      "n": 25,
+      "errors": 0,
+      "key_fact_coverage": 0.2157,
+      "judge_mean": 3.16,
+      "tool_call_rate": 0.04
+    }
+  }
+}

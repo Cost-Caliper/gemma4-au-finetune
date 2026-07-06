@@ -1,0 +1,25 @@
+{
+  "tuned_local": {
+    "holdout": {
+      "n": 150,
+      "errors": 0,
+      "key_fact_coverage": 0.1048,
+      "judge_mean": 4.41,
+      "judged_n": 149
+    },
+    "retention": {
+      "n": 60,
+      "errors": 0,
+      "key_fact_coverage": 0.1212,
+      "judge_mean": 4.62,
+      "judged_n": 60
+    },
+    "code": {
+      "n": 7,
+      "errors": 0,
+      "key_fact_coverage": null,
+      "judge_mean": 2.71,
+      "judged_n": 7
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "tuned_v3": {
+    "holdout": {
+      "n": 145,
+      "errors": 5,
+      "key_fact_coverage": 0.1597,
+      "judge_mean": 4.32
+    },
+    "retention": {
+      "n": 60,
+      "errors": 0,
+      "key_fact_coverage": 0.2135,
+      "judge_mean": 4.43
+    },
+    "code": {
+      "n": 7,
+      "errors": 0,
+      "key_fact_coverage": null,
+      "judge_mean": 2.71
+    }
+  }
+}

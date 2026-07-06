@@ -1,0 +1,1110 @@
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm hitting a problem with mastra: Zod Peer Conflict. How do I diagnose and fix it?<end_of_turn>
+<start_of_turn>model
+# Troubleshooting: Zod Peer Conflict
+
+**Symptom:** Peer dependency warning at install, or schema validation failing at runtime.
+
+```
+WARN  Issues with peer dependencies found
+└─┬ @mastra/core@1.35.0
+  └── ✕ unmet peer zod@^3.23.8: found 4.x.x
+```
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using mastra (ts), write the code for: Mastra Recipes (Self-Contained Copy-Paste).<end_of_turn>
+<start_of_turn>model
+```ts
+const tid = `t-${Date.now()}`;
+await mastra.getAgent('memoAgent').generate('My name is Ada.', { memory: { thread: tid, resource: tid } });
+const res = await mastra.getAgent('memoAgent').generate('What is my name?', { memory: { thread: tid, resource: tid } });
+expect(res.text?.toLowerCase()).toContain('ada');
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with cloudflare. What's the gotcha here: Wrangler OAuth token's `ai (write)` scope does NOT cover AI Gateway management? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## How to fix
+
+1. Visit https://dash.cloudflare.com/profile/api-tokens
+2. Click "Create Token" → Custom token
+3. **Permissions:** Account → Cloudflare AI Gateway → Edit
+4. **Account Resources:** Include → (your account)
+5. Optional: scope to specific IP addresses, set TTL
+6. Copy the token (shown ONCE — store securely)
+7. Set in your shell:
+   ```bash
+   export CF_API_TOKEN=<dashboard-token>
+   ```
+8. Use `CF_API_TOKEN` for all gateway management; continue using the wrangler OAuth token for `env.AI.run()` inference [evidence: `03-ai-gateway/03-pocs/L0-gateway-creation/README.md` lines 49-54].<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with pi. What's the gotcha here: G-04: In non-TTY mode, pi writes the model response to a FILE, not stdout? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## Fix
+
+Always include `--mode text` for programmatic use:
+```bash
+pi --provider ollama --model llama3.1:8b --mode text \
+   -p "say hi"
+```
+With `--mode text`, the response goes to stdout regardless of TTY status.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using huggingface (python), write the code for: Official Docs Summary.<end_of_turn>
+<start_of_turn>model
+```python
+import os
+from huggingface_hub import InferenceClient
+
+client = InferenceClient(api_key=os.environ["HF_TOKEN"])
+completion = client.chat.completions.create(
+    model="deepseek-ai/DeepSeek-V3-0324",
+    messages=[{"role": "user", "content": "What is the capital of France?"}],
+    max_tokens=500,
+)
+print(completion.choices[0].message.content)
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using supabase (typescript), write the code for: Lab L5 — Failure Modes (failure-modes-and-observability).<end_of_turn>
+<start_of_turn>model
+```typescript
+const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+const payload = btoa(JSON.stringify({ sub: 'fake', exp: Math.floor(Date.now()/1000) - 100, iss: 'x' }));
+const sig = 'not_a_real_sig';
+const fakeJwt = `${header}.${payload}.${sig}`;
+const r = await fetch(url, { method: 'POST', headers: { Authorization: `Bearer ${fakeJwt}` } });
+expect(r.status).toBe(401);
+expect((await r.json()).code).toBe('UNAUTHORIZED_LEGACY_JWT');
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using vercel (tsx), write the code for: Setup — Vercel Observability.<end_of_turn>
+<start_of_turn>model
+```tsx
+// app/layout.tsx
+import { Analytics } from '@vercel/analytics/next';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <Analytics />
+      </body>
+    </html>
+  );
+}
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with supabase. What's the gotcha here: `public` schema has SELECT/INSERT/UPDATE/DELETE GRANTed to anon by default? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## Cause
+
+Supabase configures the `public` schema with default GRANTs to the `anon` and `authenticated` roles. The combination of:
+
+- `public` schema is **exposed via PostgREST** (default in `config.toml`)
+- `anon` has `SELECT, INSERT, UPDATE, DELETE` GRANTs by default on `public.*`
+- RLS is **NOT** auto-enabled (gotcha-rls-not-auto-enabled.md)
+
+…means a `CREATE TABLE public.x` is, by default, **wide open to anyone with the anon key**.
+
+[Inferred from docs, configuration-and-env-vars.md "PostgREST exposes only schemas listed in config.toml"; security-model.md "Exposed Schema Risk"]<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What did hands-on work with supabase teach about: Lesson 07 — Inbox-Free Testing (The Doctrine)?<end_of_turn>
+<start_of_turn>model
+## The Token Types You'll Encounter
+
+| `type` | Source | Triggers |
+|---|---|---|
+| `'signup'` | `signUp` confirmation | First-time user activation |
+| `'magiclink'` | Passwordless sign-in | `signInWithOtp({email})` |
+| `'recovery'` | Password reset | `resetPasswordForEmail` |
+| `'invite'` | Admin invite | `admin.inviteUserByEmail` |
+| `'email_change_current'` | Email change — old address | `updateUser({email})` flow |
+| `'email_change_new'` | Email change — new address | `updateUser({email})` flow |
+
+`admin.generateLink({type})` short-circuits all of them.
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with composio. What's the gotcha here: `tools.execute` returns a result-envelope, not a thrown value? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## Fix / workaround
+```ts
+const res = await composio.tools.execute(slug, { userId, arguments, version });
+if (!res.successful) {
+  throw new Error(`tool ${slug} failed: ${res.error} (logId=${res.logId})`);
+}
+const payload = res.data;       // top-level keys: ["response"]
+const response = payload?.response;
+// e.g. for GITHUB_GET_THE_AUTHENTICATED_USER: response.login = 'dennisonbertram'
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with supabase. What's the gotcha here: 150-s wall-clock timeout returns `IDLE_TIMEOUT`, not `GATEWAY_TIMEOUT`? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## See also
+
+- `../playbooks/debugging-playbooks.md` "Why is my function returning 504?"
+- `../distilled-principles.md` Principle 5<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using vercel (ts), write the code for: Integrations — Vercel Sandbox.<end_of_turn>
+<start_of_turn>model
+```ts
+import { generateText } from 'ai';
+
+const { text } = await generateText({
+  model: 'openai/gpt-5.4-nano',
+  prompt: `Generate Node.js code that prints the result of: ${userQuestion}`,
+});
+
+const sb = await Sandbox.create({ networkPolicy: 'deny-all', timeout: 30_000 });
+try {
+  await sb.writeFiles([{ path: 'main.js', content: Buffer.from(text) }]);
+  const r = await sb.runCommand('node', ['main.js']);
+  return { generatedCode: text, exitCode: r.exitCode, output: await r.stdout() };
+} finally {
+  await sb.stop();
+}
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm hitting a problem with supabase: Trouble — `mfa.verify` returns `invalid_otp_code`. How do I diagnose and fix it?<end_of_turn>
+<start_of_turn>model
+### 1. Clock skew
+
+TOTP codes use a 30-second time window. If your test runner's clock is off by >30s from Supabase server time, codes are rejected.
+
+**Fix:** Sync NTP. Verify with `date -u` (compare to `https://time.is/UTC`).<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What's a proven pattern for 'P-03: Minimum SDK-embedding shape (`createAgentSession` + `inMemory` + `subscribe`)' when working with pi?<end_of_turn>
+<start_of_turn>model
+## Evidence
+
+- L4 evidence.md B-L4-1/B-L4-2: this exact shape returned sentinel
+  `L4_SDK_<timestamp>` from live Ollama. Live verified.
+- L4 `tests/sdk-live.test.ts`: full test using this pattern. Live verified.
+- L4 `src/embed.ts`: runnable example. Live verified (POC L4 B-L4-embed).<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm hitting a problem with supabase: Trouble — Secret Set, but `Deno.env.get` Returns Undefined. How do I diagnose and fix it?<end_of_turn>
+<start_of_turn>model
+## Symptom
+
+You ran `supabase secrets set MY_KEY=foo`. Inside the function, `Deno.env.get('MY_KEY')` returns `undefined`.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm hitting a problem with supabase: Trouble — Top-k returns 0 rows on a corpus that should match. How do I diagnose and fix it?<end_of_turn>
+<start_of_turn>model
+## Diagnosis tree
+
+```
+1. Are there rows at all?
+   select count(*) from au_d06_docs;
+   → If 0: nothing was inserted (check error from INSERT step).
+
+2. Does the RPC exist in PostgREST's cache?
+   → If error.code = 'PGRST202': run `notify pgrst, 'reload schema'` + 3 s. [principle #9]
+
+3. Is RLS blocking?
+   With anon client + auth.uid() not set: RLS returns 0 rows.
+   With anon client + signed in as a user with 0 docs: 0 rows.
+   → Check via service_role client to see all rows.
+
+4. Are there NULL embeddings?
+   select count(*) from au_d06_docs where embedding is null;
+   → Sorted-last in ASC. Filter with `where embedding is not null` in your RPC body. [principle #19]
+
+5. Is `ivfflat.probes = 1`?
+   IVFFlat with probes=1 may return < k. SET LOCAL ivfflat.probes = 10. [principle #16]
+
+6. Is `hnsw.ef_search` too low?
+   Default 40. Set ≥ k * 2. [principle #12]
+
+7. Is the WHERE clause filtering everything out?
+   Check the RPC body — does it have a `where` clause that's too restrictive?
+```
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using supabase (ts), write the code for: Testing Playbooks — Supabase Edge Functions.<end_of_turn>
+<start_of_turn>model
+```ts
+const sanitized = msg
+  .replace(/sbp_[A-Za-z0-9]+/g, "sbp_REDACTED")
+  .replace(/sb_secret_[A-Za-z0-9]+/g, "sb_secret_REDACTED")
+  .replace(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g, "JWT_REDACTED")
+  .slice(0, 500);
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with langgraph. What's the gotcha here: G-014: `LastValue` channel concurrent writes throw `InvalidUpdateError`? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## Fix
+
+Switch the channel to a reducer:
+
+```typescript
+// BROKEN — bare LastValue
+status: Annotation<string>,
+
+// FIXED — declare a reducer that handles N concurrent writes
+status: Annotation<string>({
+  reducer: (l, r) => r,           // last writer wins (deterministic order)
+  default: () => "init",
+}),
+
+// or accumulate
+log: Annotation<string[]>({
+  reducer: (l, r) => l.concat(r),
+  default: () => [],
+}),
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using vercel (ts), write the code for: Common Use Cases — Vercel AI SDK.<end_of_turn>
+<start_of_turn>model
+```ts
+import { streamText } from "ai";
+
+const result = streamText({
+  model: "openai/gpt-5.4-nano",
+  prompt: "Count from 1 to 5, one number per line",
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+You're an agent about to work with supabase. What operating instructions matter for: Agent Instructions — Supabase Database and RLS?<end_of_turn>
+<start_of_turn>model
+## If Asked to Write an RLS Policy
+
+Template (substitute `<table>` and `<user_col>`):
+
+```sql
+-- SELECT: read own rows
+drop policy if exists "<table>_select_own" on public.<table>;
+create policy "<table>_select_own"
+  on public.<table> for select to authenticated
+  using ( (select auth.uid()) = <user_col> );
+
+-- INSERT: create only own rows
+drop policy if exists "<table>_insert_own" on public.<table>;
+create policy "<table>_insert_own"
+  on public.<table> for insert to authenticated
+  with check ( (select auth.uid()) = <user_col> );
+
+-- UPDATE: USING for finding the row, WITH CHECK for the new value
+drop policy if exists "<table>_update_own" on public.<table>;
+create policy "<table>_update_own"
+  on public.<table> for update to authenticated
+  using ( (select auth.uid()) = <user_col> )
+  with check ( (select auth.uid()) = <user_col> );
+
+-- DELETE: USING only
+drop policy if exists "<table>_delete_own" on public.<table>;
+create policy "<table>_delete_own"
+  on public.<table> for delete to authenticated
+  using ( (select auth.uid()) = <user_col> );
+```
+
+**Mandatory checks before committing:**
+
+- [ ] Used `(select auth.uid())` not bare `auth.uid()`
+- [ ] Specified `to authenticated` (or the correct target role) on every policy
+- [ ] UPDATE policy has BOTH `using` and `with check`
+- [ ] INSERT policy has `with check` (not `using`)
+- [ ] A SELECT policy exists if there is an UPDATE policy
+- [ ] FK column referenced in the policy has an index
+- [ ] RLS is enabled on the table
+
+Checklist: `checklists/checklist-rls-policy-review.md`
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using langfuse (python), write the code for: G-001: Langfuse SDK v3 is OpenTelemetry-based — the v2 `.trace()/.generation()` fluent API is gone.<end_of_turn>
+<start_of_turn>model
+```python
+from langfuse import get_client
+from langfuse.openai import openai            # drop-in: auto-traces the call as a GENERATION
+
+client = get_client()
+with client.start_as_current_span(name="au-langfuse-l0", trace_context={"trace_id": tid}) as span:
+    span.update_trace(name="au-langfuse-l0", metadata={"run_id": run_id})
+    openai.chat.completions.create(model="gpt-4o-mini", messages=[...])
+client.flush()
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using vercel (bash), write the code for: Authentication and Authorization — Vercel Platform Security.<end_of_turn>
+<start_of_turn>model
+```bash
+vercel api PATCH "/v9/projects/$PROJECT_ID" --data '{
+  "passwordProtection": {
+    "deploymentType": "prod_deployment_urls_and_all_previews",
+    "password": "degree-13-test-password-DO-NOT-REUSE"
+  }
+}'
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using langgraph (typescript), write the code for: LangGraph JS/TS — Human-in-the-Loop.<end_of_turn>
+<start_of_turn>model
+```typescript
+import { Command } from "@langchain/langgraph";
+
+// Stream with resume value
+for await (const event of await compiled.stream(
+  new Command({ resume: "approve" }),
+  config   // same thread_id
+)) {
+  console.log(event);
+}
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What did hands-on work with supabase teach about: Lesson 01 — pgvector Mental Model?<end_of_turn>
+<start_of_turn>model
+## Hosted vs local divergence
+
+- pgvector version may differ on local.
+- PostgREST schema-cache behavior may differ.
+- Index build timing is wildly different.
+- **Therefore:** vector claims must be re-verified against hosted. [principle #36]
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using arcade, show me how to accomplish this: R-001: Authenticate the SDK and read the tool catalog safely. Give working code where relevant.<end_of_turn>
+<start_of_turn>model
+## Expected result (live)
+
+- `client.tools.list(limit=25)` returns 25 `ToolDefinition`s (first page is
+  alphabetical → all `AirtableApi`).
+- `toolkit="Math"` → 23 tools, `toolkit="GitHub"` → 43 tools, with no leakage
+  from other toolkits.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using supabase (typescript), write the code for: After disconnect+connect, no events arrive.<end_of_turn>
+<start_of_turn>model
+```typescript
+console.log('connectionState:', supa.realtime.connectionState());     // 'open' / 'closed'
+console.log('isConnected:',     supa.realtime.isConnected());
+console.log('channels count:',  supa.realtime.getChannels().length);
+console.log('channels state:',  supa.realtime.getChannels().map(c => c.state));
+// If state is 'closed' or 'errored' post-connect, you need to re-create.
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using vercel, show me how to accomplish this: Recipe 01 — Minimal `generateText` through the Vercel AI Gateway. Give working code where relevant.<end_of_turn>
+<start_of_turn>model
+## Verification
+
+- `usage.totalTokens > 0` proves a real model inference occurred.
+- `latency_ms` between ~500ms and 7000ms proves the call crossed the network (mocks would be sub-millisecond).
+- The masked API key prefix `vck_1l0I...` (or whatever your key prefix is) confirms `loadConfig()` ran.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using composio, show me how to accomplish this: Look Up a Tool Execution Log Post-Hoc. Give working code where relevant.<end_of_turn>
+<start_of_turn>model
+# Retrieve a single log
+curl -H "x-api-key: $COMPOSIO_API_KEY" \
+  "https://backend.composio.dev/api/v3.1/logs/tool_execution/log_FBqPGj0hNF9j"<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with langsmith. What's the gotcha here: G-009: `LANGSMITH_TRACING` env var is read at CALL time, not import time? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+# G-009: `LANGSMITH_TRACING` env var is read at CALL time, not import time
+
+**Category**: configuration / tracing lifecycle
+**Severity**: low (mostly useful — but the inverse assumption is common)
+**Discovered in**: L2
+**Evidence**: `03-pocs/L2-langchain-auto-tracing/surprises.md` (SURPRISE-2, lines 17-23); `03-pocs/L2-langchain-auto-tracing/evidence.md` (TEST-LIVE-002 — flag flipped mid-test, suppression confirmed).<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with composio. What's the gotcha here: Cloudflare WAF can transiently 403 `backend.composio.dev`? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## Symptom
+Every outbound request from a given IP to
+`backend.composio.dev` (any path — `/api/v3/toolkits`, `/api/v3/tools`,
+`/api/v3.1/auth_configs`, `/api/v3.1/connected_accounts`) returns:
+- HTTP 403
+- `cf-mitigated: challenge` header
+- HTML body containing `"Just a moment..."` and a Composio errorId
+- `cf-ray` identifier
+
+The SDK surfaces this as `PermissionDeniedError: 403` with the raw HTML
+in the error message — NO JSON error envelope, no `code`, no
+`suggested_fix`. Same API key that worked an hour earlier.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What did hands-on work with supabase teach about: Lesson 09 — Cleanup Discipline?<end_of_turn>
+<start_of_turn>model
+# Lesson 09 — Cleanup Discipline
+
+**Read time:** 5 min.
+**Outcome:** Build a test suite that produces 0 residual artifacts across many channels and clients.
+
+→ Back to `../curriculum.md` | Next: `labs/lab-L0-smoke.md`
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Give me a practical quickstart for langfuse: Langfuse Observability & Evals (L0).<end_of_turn>
+<start_of_turn>model
+## Step 5 — The minimal working code
+
+This is the canonical shape from `source/poc.py` (verbatim structure, live-verified):
+
+```python
+import time
+from langfuse import get_client
+from langfuse.openai import openai   # drop-in: auto-traces the call as a GENERATION
+
+MODEL, TRACE_NAME = "gpt-4o-mini", "au-langfuse-l0"
+
+client = get_client()
+assert client.auth_check(), "Langfuse auth_check failed — check HOST and keys"  # G-002
+
+trace_id = client.create_trace_id()   # or use $L0_TRACE_ID from the shell export
+run_id   = "l0-your-unique-run-id"    # stamp into metadata to prove the read-back is yours
+
+with client.start_as_current_span(
+    name=TRACE_NAME,
+    trace_context={"trace_id": trace_id},
+) as span:
+    span.update_trace(name=TRACE_NAME, metadata={"run_id": run_id})
+    resp = openai.chat.completions.create(
+        model=MODEL,
+        messages=[{"role": "user", "content": "Reply with the single word: pong"}],
+        max_tokens=5,
+        temperature=0,
+    )
+
+client.flush()   # REQUIRED — without this the trace is silently dropped (G-004)<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm hitting a problem with supabase: Trouble — `error.statusCode` is undefined or my branching is wrong. How do I diagnose and fix it?<end_of_turn>
+<start_of_turn>model
+## Fix
+
+```typescript
+if (error?.statusCode === '404') { /* not found / RLS read */ }
+if (error?.statusCode === '413') { /* too large */ }
+if (error?.statusCode === '415') { /* MIME */ }
+if (error?.statusCode === '403') { /* RLS write */ }
+if (error?.statusCode === '409') { /* collision */ }
+```
+
+Note the STRING quotes. `error.statusCode === 404` (number) NEVER matches because the field is `'404'`.
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using zep, show me how to accomplish this: stand up a Graphiti + FalkorDB + OpenAI client (cheap-model path). Give working code where relevant.<end_of_turn>
+<start_of_turn>model
+## Gotchas baked into this recipe
+
+- `reasoning=None, verbosity=None` is mandatory for `gpt-4o-mini` (see `gotchas/G-001`).
+- The default port here is host `6391` mapped to container `6379` (`-p 6391:6379`). **[Live verified]** — `commands.md` section 1.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Where does cloudflare behave differently than the docs or common assumptions suggest, regarding: Expectation Gap Log — 03-ai-gateway?<end_of_turn>
+<start_of_turn>model
+## Template
+| Timestamp | POC Level | Expected | Actual | Impact | Updated? |
+|-----------|-----------|---------|--------|--------|---------|
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with supabase. What's the gotcha here: HNSW vs IVFFlat top-5 agreement averages 0.80/5 on identical data? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## The mistake
+
+```ts
+// WRONG — assumes HNSW and IVFFlat return the same neighbors
+const hnswResults = await query(t1HnswOnly);
+const ivfResults = await query(t1IvfOnly);
+expect(hnswResults.map(r => r.id)).toEqual(ivfResults.map(r => r.id)); // FAILS
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using composio (typescript), write the code for: Common Use Cases.<end_of_turn>
+<start_of_turn>model
+```typescript
+import { Composio } from "@composio/core";
+import { VercelProvider } from "@composio/vercel";
+import { generateText, stepCountIs } from "ai";
+import { anthropic } from "@ai-sdk/anthropic";
+
+const composio = new Composio({ provider: new VercelProvider() });
+const session = await composio.create("user_123");
+const tools = await session.tools();
+
+const { text } = await generateText({
+  model: anthropic("claude-opus-4-6"),
+  tools,
+  prompt: "Send an email to john@example.com",
+  stopWhen: stepCountIs(10),
+});
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm hitting a problem with composio: 401 Unauthorized from Composio. How do I diagnose and fix it?<end_of_turn>
+<start_of_turn>model
+### Step 1: Verify the key is loaded
+
+```ts
+console.log({
+  hasKey: Boolean(process.env.COMPOSIO_API_KEY),
+  keyLen: process.env.COMPOSIO_API_KEY?.length ?? 0,
+  keyPrefix: process.env.COMPOSIO_API_KEY?.slice(0, 5) ?? 'none',
+});
+// Expected: { hasKey: true, keyLen: ~48, keyPrefix: 'ak_...' }
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with supabase. What's the gotcha here: `signInAnonymously` users get `authenticated` role, NOT `anon`? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## Why It's Easy to Miss
+
+- "Anonymous sign-in" is named to sound like "no sign-in" — but it IS a sign-in with auto-generated credentials.
+- The Supabase Auth docs page describes anonymous sign-in as a separate auth method, but the DB layer treats those users identically to email/password users.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with supabase. What's the gotcha here: `--no-verify-jwt` also bypasses the `apikey` header — the function is fully world-callable? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## Symptom
+
+You deploy a function with `--no-verify-jwt` thinking "no Bearer required, but the gateway still requires the `apikey` header". You're wrong. Both auth gates are off.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using cloudflare, show me how to accomplish this: Create an AI Gateway via REST API. Give working code where relevant.<end_of_turn>
+<start_of_turn>model
+## Cross-links
+- `playbooks/create-gateway-and-test-proxy.md`
+- `gotchas/oauth-vs-dashboard-token.md`
+- `gotchas/no-wrangler-ai-gateway-cli.md`<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Give me a practical quickstart for vercel: First Live Gateway Call in 5 Minutes.<end_of_turn>
+<start_of_turn>model
+## Step 2 — Verify your key with a raw HTTP call
+
+```bash
+curl -s -X POST "https://ai-gateway.vercel.sh/v1/chat/completions" \
+  -H "Authorization: Bearer $AI_GATEWAY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"openai/gpt-5.4-nano","messages":[{"role":"user","content":"Reply with the single word: pong"}],"max_tokens":5}' \
+  | jq '{status: "ok", content: .choices[0].message.content, total_tokens: .usage.total_tokens}'
+```
+
+Expected output:
+```json
+{ "status": "ok", "content": "pong", "total_tokens": 19 }
+```
+
+`total_tokens > 0` proves a real inference occurred. **[Live verified — L0 BT-002]**<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What did hands-on work with composio teach about: Lesson L5: Failure Modes and Observability?<end_of_turn>
+<start_of_turn>model
+# List (POST only — GET 404s)
+curl -X POST -H "x-api-key: $COMPOSIO_API_KEY" -H "content-type: application/json" \
+  --data '{"limit": 5}' \
+  "https://backend.composio.dev/api/v3.1/logs/tool_execution"
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using supabase (ts), write the code for: Live-Access Playbooks — Supabase Realtime.<end_of_turn>
+<start_of_turn>model
+```ts
+import { createClient } from '@supabase/supabase-js';
+
+async function createTestUser(email: string, password: string) {
+  const admin = createClient(URL, SERVICE_ROLE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data, error } = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,   // skip the email verification flow
+  });
+  if (error) throw error;
+  return data.user;
+}
+
+async function deleteTestUser(userId: string) {
+  const admin = createClient(URL, SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+  const { error } = await admin.auth.admin.deleteUser(userId);
+  if (error) throw error;
+}
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What did hands-on work with supabase teach about: Lesson 01 — Supabase Auth Mental Model?<end_of_turn>
+<start_of_turn>model
+## The Mental Picture
+
+When you call `signInWithPassword`:
+
+1. supabase-js POSTs `{email, password}` to `GoTrue /auth/v1/token?grant_type=password`.
+2. GoTrue validates against the `auth.users` row (bcrypt over `encrypted_password`), then:
+   - If valid → signs and returns `{access_token, refresh_token, expires_in, ...}`.
+   - If invalid (wrong pw OR unknown email) → returns `{code:'invalid_credentials', status:400}`.
+3. supabase-js stores the pair in `localStorage` (default `storage`), emits `SIGNED_IN` on `onAuthStateChange`.
+4. Subsequent PostgREST calls inject `Authorization: Bearer <at>`.
+5. PostgREST hands the JWT to Postgres, which sets `request.jwt.claims` GUC and `SET ROLE <claim.role>`. RLS policies see `auth.uid()` returning the `sub`.
+
+Internalising this five-step path means you can debug any auth bug by asking: where in this chain did the contract break?
+
+---<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using pi (typescript), write the code for: G-38: Subagent child pi inherits ALL parent env vars unfiltered — security risk.<end_of_turn>
+<start_of_turn>model
+```typescript
+import { spawn } from "child_process";
+
+function sanitizeEnv(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const BLOCKED = [
+    "OPENAI_API_KEY", "ANTHROPIC_API_KEY", "DEEPSEEK_API_KEY",
+    // add all credential names here
+  ];
+  const sanitized = { ...env };
+  for (const key of BLOCKED) {
+    delete sanitized[key];
+  }
+  return sanitized;
+}
+
+// In runSingleAgent():
+const proc = spawn(cmd, args, {
+  cwd,
+  shell: false,
+  stdio: ["ignore", "pipe", "pipe"],
+  env: sanitizeEnv(process.env),  // ← add this
+});
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What did hands-on work with composio teach about: Capstone — Combined System?<end_of_turn>
+<start_of_turn>model
+## Architecture
+
+```
+POST / { userId, prompt }
+         |
+         v
+lookupConnection(composio, userId)
+         |
+  status === 'ACTIVE' ?
+     |           |
+    YES           NO
+     |           |
+runAgentTurn  initiateConnection
+     |           |
+  json(200,   json(200,
+  { ok: true, { ok: true,
+   needsConn:  needsConn:
+    false, ...})  true,
+              redirectUrl })
+         |           |
+    classifyError (catch any thrown SDK error)
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using mastra (ts), write the code for: Lesson 05 — Workflows.<end_of_turn>
+<start_of_turn>model
+```ts
+const fetchHistorical = createStep({
+  id: 'fetch-historical',
+  inputSchema: z.object({ date: z.string().optional() }),
+  outputSchema: z.object({ historicalRate: z.number().optional() }),
+  execute: async ({ inputData }) => {
+    if (!inputData.date) return { historicalRate: undefined };  // early return = branch
+    const r = await fetch(`https://api.frankfurter.app/${inputData.date}?from=USD&to=EUR`);
+    const j = await r.json();
+    return { historicalRate: j.rates.EUR };
+  },
+});
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What's a proven pattern for 'TUS resumable upload — chunked, resumable, abort-tolerant' when working with supabase?<end_of_turn>
+<start_of_turn>model
+## See also
+
+- `../recipes/recipe-tus-resumable-upload.md` — minimal end-to-end TS including abort+resume.
+- `../decision-records/ADR-D03-0005-tus-js-client-for-resumable.md` — why `tus-js-client` over `@uppy/tus`.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+When using supabase, what's the anti-pattern around 'Committing or logging signed URLs', and what should I do instead?<end_of_turn>
+<start_of_turn>model
+### For URL handling
+
+- **Generate just-in-time**, send over HTTPS, never persist client-side beyond the immediate operation.
+- **Set the shortest practical TTL** — seconds for hand-offs, minutes for email links. Avoid hours.
+- **Don't echo into logs** — log `{ issuer_uid, path, issued_at, expires_at }`, not the URL.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using supabase (ts), write the code for: client.ts.<end_of_turn>
+<start_of_turn>model
+```ts
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+
+function required(name: string): string {
+  const v = process.env[name];
+  if (!v) {
+    throw new Error(
+      `Missing required env var: ${name}. Populate supabase/.env.local before running live tests.`,
+    );
+  }
+  return v;
+}
+
+/** Creates a client using the anon key (subject to RLS / auth). */
+export function createAnonClient(): SupabaseClient {
+  return createClient(required("SUPABASE_URL"), required("SUPABASE_ANON_KEY"), {
+    auth: { persistSession: false, autoRefreshToken: false },
+    realtime: { params: { eventsPerSecond: 10 } },
+  });
+}
+
+/** Creates a client using the service_role key (admin/server-only). */
+export function createServiceRoleClient(): SupabaseClient {
+  return createClient(required("SUPABASE_URL"), required("SUPABASE_SERVICE_ROLE_KEY"), {
+    auth: { persistSession: false, autoRefreshToken: false },
+    realtime: { params: { eventsPerSecond: 10 } },
+  });
+}
+
+/**
+ * Creates an anon-key client whose Realtime subscription will carry a user JWT
+ * via the `Authorization` header (needed for RLS-gated private channels).
+ */
+export function createUserClient(jwt: string): SupabaseClient {
+  return createClient(required("SUPABASE_URL"), required("SUPABASE_ANON_KEY"), {
+    global: { headers: { Authorization: `Bearer ${jwt}` } },
+    realtime: { params: { eventsPerSecond: 10 } },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+What did hands-on work with vercel teach about: Lesson 01 — First Call: Raw HTTP (L0) and AI SDK (L1)?<end_of_turn>
+<start_of_turn>model
+# 271 (live count as of 2026-05-17/2026-05-18)
+```
+
+**[Live verified — L0 BT-001]** The endpoint is unauthenticated. You can call it at any time to see what models are available.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Give me a practical quickstart for supabase: Supabase Auth.<end_of_turn>
+<start_of_turn>model
+### 3. `refreshSession` rotates BOTH access_token AND refresh_token
+
+`refresh_token_rotation_enabled=true` is the project default. After refresh, `at1 !== at2` AND `rt1 !== rt2`. Treat rotated rt as still-usable for the test session lifetime (`security_refresh_token_reuse_interval=10s`; observed >16s in BT-L5-06). [Live verified, L2 BT-L2-01; L5 BT-L5-06; Gap #23]
+
+See `lessons/lesson-05-refresh-rotation.md`.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using json-render, show me how to accomplish this: R-002: Constrain a live Anthropic model with `catalog.prompt()` → compile → validate → render. Give working code where relevant.<end_of_turn>
+<start_of_turn>model
+## Snippet
+
+```js
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { generateText } from "ai";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createSpecStreamCompiler, validateSpec } from "@json-render/core";
+import { JSONUIProvider, Renderer } from "@json-render/react";
+import { catalog, registry, validateElements } from "./catalog.mjs"; // from R-001
+
+if (!process.env.ANTHROPIC_API_KEY) throw new Error("BLOCKED: set ANTHROPIC_API_KEY (no mocks).");
+const anthropic = createAnthropic();
+
+// 1. Generate under the catalog constraint (see G-006: skipping this fails validation)
+const res = await generateText({
+  model: anthropic("claude-haiku-4-5"),
+  system: catalog.prompt(),                    // 14KB JSONL-JSON-Patch contract
+  prompt: "Build a SaaS metrics dashboard",
+});
+
+// 2. Compile JSONL patches -> Spec (see G-004: output is patches, NOT a Spec)
+const compiler = createSpecStreamCompiler();
+const lines = res.text.split("\n").filter(l => l.trim().startsWith('{"op"'));
+compiler.push(lines.join("\n") + "\n");
+const spec = compiler.getResult();             // { root, elements, state }
+
+// 3. Validate: structure + catalog type/props (NOT catalog.validate — see G-001, G-002)
+const struct = validateSpec(spec, { checkOrphans: true });
+const els = validateElements(spec);            // per-component Zod props walker
+if (!struct.valid || !els.valid) throw new Error("invalid spec");
+
+// 4. Render. NOTE: seed spec.state or $state props render empty (see G-003)
+const html = renderToStaticMarkup(
+  React.createElement(JSONUIProvider, null,
+    React.createElement(Renderer, { spec, registry /*, seed spec.state here */ })));
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+You're an agent about to work with openai. What operating instructions matter for: Agent Instructions — OpenAI Responses API & Agents SDK?<end_of_turn>
+<start_of_turn>model
+## Evidence scope — what is and is not live-verified
+
+Only POC L0 (strict structured output) has been run live in this degree. These items are
+**live-verified** (provider id on record):
+
+- `client.responses.create` with `text.format` json_schema strict mode
+- `additionalProperties: false` honored server-side
+- Enum constraints enforced at decode time
+- `output_text` is a string requiring `json.loads`
+- `gpt-5-nano` alias resolving to a dated id
+- Reasoning-token cost structure on gpt-5.x
+
+These items are **research-supported but not yet live-verified** — treat as hypotheses
+until a POC emits a provider id:
+
+- Hosted tools: `web_search`, `file_search`, citations, vector stores
+- Agents SDK: `Runner`, multi-agent handoffs, guardrails, tracing
+
+(Source: `../05-distillation/distilled-principles.md` principle 10,
+`../05-distillation/before-you-build.md`)<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using vercel (ts), write the code for: vitest.config.ts.<end_of_turn>
+<start_of_turn>model
+```ts
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    // 30 seconds per test to accommodate live Vercel deployment latency
+    // and BotID API round-trip time (api.vercel.com/bot-protection/v1/is-bot)
+    testTimeout: 30_000,
+    hookTimeout: 15_000,
+    reporter: 'verbose',
+    // Run tests serially to avoid overwhelming the BotID classification endpoint
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
+  },
+});
+
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+I'm building with vercel. What's the gotcha here: Gotcha 02 — `@hono/node-server/vercel`'s `handle()` hangs on POST on Vercel Fluid Compute? How do I avoid it?<end_of_turn>
+<start_of_turn>model
+## What it looks like in practice
+
+```ts
+// WRONG — POSTs hang for 60 seconds, then return FUNCTION_INVOCATION_TIMEOUT
+// api/index.ts
+import { handle } from '@hono/node-server/vercel';
+import { createApp } from '../src/server.js';
+const app = createApp();
+export default handle(app);
+export const runtime = 'nodejs';
+```
+
+```ts
+// CORRECT — POST + GET both work; uses Hono's native Web fetch handler
+// api/index.ts
+import { createApp } from '../src/server.js';
+const app = createApp();
+export default { fetch: app.fetch.bind(app) };
+export const runtime = 'nodejs';
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using vercel, show me how to accomplish this: Recipe 05 — Deploy a Hono AI Gateway app to Vercel Fluid Compute. Give working code where relevant.<end_of_turn>
+<start_of_turn>model
+## Goal
+
+Walk from a local Hono app to a deployed `.vercel.app` URL with two routes (`POST /chat`, `GET /health`) and live tests asserting the deployed behavior.<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using vercel (json), write the code for: Live Service Model — Vercel v0.<end_of_turn>
+<start_of_turn>model
+```json
+{
+  "id": "chatcmpl-12345",
+  "object": "chat.completion",
+  "created": 1677652288,
+  "model": "v0-1.5-md",
+  "choices": [
+    {
+      "index": 0,
+      "message": { "role": "assistant", "content": "..." },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 10,
+    "completion_tokens": 12,
+    "total_tokens": 22
+  }
+}
+```<end_of_turn>
+
+<start_of_turn>user
+You are an expert software agent for modern AI/agent libraries, developer tools, and cloud services. You implement tasks against real services with runnable code, cite exact API surfaces, and answer from hands-on evidence — you flag pitfalls honestly and never invent APIs.
+
+Using langgraph (json), write the code for: Reference — Packages and Versions.<end_of_turn>
+<start_of_turn>model
+```json
+{
+  "dependencies": {
+    "@langchain/langgraph": "1.3.0",
+    "@langchain/core": "^1.1.44",
+    "@langchain/anthropic": "^1.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.x",
+    "vitest": "^2.x",
+    "tsx": "^4.x",
+    "@types/node": "^20.x"
+  }
+}
+```<end_of_turn>

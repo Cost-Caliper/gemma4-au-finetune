@@ -1,0 +1,68 @@
+{
+  "summary_tuned_local": {
+    "tuned_local": {
+      "holdout": {
+        "n": 150,
+        "errors": 0,
+        "key_fact_coverage": 0.1048,
+        "judge_mean": null
+      },
+      "retention": {
+        "n": 60,
+        "errors": 0,
+        "key_fact_coverage": 0.1212,
+        "judge_mean": null
+      },
+      "code": {
+        "n": 7,
+        "errors": 0,
+        "key_fact_coverage": null,
+        "judge_mean": null
+      }
+    }
+  },
+  "summary_base_local": {
+    "base_local": {
+      "holdout": {
+        "n": 150,
+        "errors": 0,
+        "key_fact_coverage": 0.0714,
+        "judge_mean": null
+      },
+      "retention": {
+        "n": 60,
+        "errors": 0,
+        "key_fact_coverage": 0.0889,
+        "judge_mean": null
+      },
+      "code": {
+        "n": 7,
+        "errors": 0,
+        "key_fact_coverage": null,
+        "judge_mean": null
+      }
+    }
+  },
+  "summary_base": {
+    "base": {
+      "holdout": {
+        "n": 150,
+        "errors": 0,
+        "key_fact_coverage": 0.0104,
+        "judge_mean": 3.28
+      },
+      "retention": {
+        "n": 60,
+        "errors": 0,
+        "key_fact_coverage": 0.0281,
+        "judge_mean": 3.24
+      },
+      "code": {
+        "n": 7,
+        "errors": 0,
+        "key_fact_coverage": null,
+        "judge_mean": 2.4
+      }
+    }
+  }
+}

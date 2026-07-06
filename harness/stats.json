@@ -1,0 +1,12 @@
+{
+  "dropped_secrets": 4,
+  "dropped_vendor_cs": 46779,
+  "knowledge_total": 7706,
+  "code_samples_kept": 4202,
+  "poc_train": 93,
+  "poc_eval": 7,
+  "train_examples": 11850,
+  "probe_count": 210,
+  "est_train_tokens": 3066269,
+  "est_cost_1epoch_usd": 9.2
+}

@@ -1,0 +1,22 @@
+{
+  "frontier_sonnet": {
+    "holdout": {
+      "n": 150,
+      "errors": 0,
+      "key_fact_coverage": 0.1476,
+      "judge_mean": 4.97
+    },
+    "retention": {
+      "n": 60,
+      "errors": 0,
+      "key_fact_coverage": 0.1501,
+      "judge_mean": 5.6
+    },
+    "code": {
+      "n": 7,
+      "errors": 0,
+      "key_fact_coverage": null,
+      "judge_mean": 5.0
+    }
+  }
+}

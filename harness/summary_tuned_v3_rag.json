@@ -1,0 +1,25 @@
+{
+  "tuned_v3_rag": {
+    "holdout": {
+      "n": 149,
+      "errors": 1,
+      "key_fact_coverage": 0.551,
+      "judge_mean": 6.99,
+      "leak_rate": 0.517
+    },
+    "retention": {
+      "n": 60,
+      "errors": 0,
+      "key_fact_coverage": 0.6274,
+      "judge_mean": 7.6,
+      "leak_rate": 0.65
+    },
+    "code": {
+      "n": 40,
+      "errors": 0,
+      "key_fact_coverage": 0.5465,
+      "judge_mean": 3.67,
+      "leak_rate": 0.0
+    }
+  }
+}

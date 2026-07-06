@@ -1,0 +1,25 @@
+{
+  "base_local": {
+    "holdout": {
+      "n": 150,
+      "errors": 0,
+      "key_fact_coverage": 0.0714,
+      "judge_mean": 4.05,
+      "judged_n": 150
+    },
+    "retention": {
+      "n": 60,
+      "errors": 0,
+      "key_fact_coverage": 0.0889,
+      "judge_mean": 4.13,
+      "judged_n": 60
+    },
+    "code": {
+      "n": 7,
+      "errors": 0,
+      "key_fact_coverage": null,
+      "judge_mean": 3.57,
+      "judged_n": 7
+    }
+  }
+}

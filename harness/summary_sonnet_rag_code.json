@@ -1,0 +1,11 @@
+{
+  "sonnet_rag_code": {
+    "code": {
+      "n": 40,
+      "errors": 0,
+      "key_fact_coverage": 0.581,
+      "judge_mean": 5.92,
+      "leak_rate": 0.0
+    }
+  }
+}

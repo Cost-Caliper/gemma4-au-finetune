@@ -1,0 +1,47 @@
+
+
+	
+Name: accounts/dennison-bertram/deployments/n35c3uam
+Display Name: au-fw-eval-gemma4-v2
+Create Time: 2026-07-04 00:23:40
+Created By: dennison@withtally.com
+State: CREATING
+Status: OK
+Annotations:
+  fireworks.ai/shape-merged-version=accounts/fireworks/deploymentShapes/gemma4-26b-a4b-it/versions/n2fgc5ov
+Min Replica Count: 1
+Max Replica Count: 1
+Desired Replica Count: 1
+Replica Count: 0
+Autoscaling Policy: disabled
+Base Model: accounts/fireworks/models/gemma-4-26b-a4b-it
+Enable Addons: true
+Enable Session Affinity: true
+Direct Route Type: DIRECT_ROUTE_TYPE_UNSPECIFIED
+Auto Tune:
+Placement:
+  Region: REGION_UNSPECIFIED
+  Multi Region: GLOBAL
+Region: REGION_UNSPECIFIED
+Update Time: 2026-07-04 00:23:40
+Disable Deployment Size Validation: true
+Hot Load Bucket Type: BUCKET_TYPE_UNSPECIFIED
+Deployment Shape:
+  Name: accounts/fireworks/deploymentShapes/gemma4-26b-a4b-it
+  Create Time: 2026-04-03 14:37:55
+  Update Time: 2026-04-06 05:05:11
+  Created By: ishaan@fireworks.ai
+  Base Model: accounts/fireworks/models/gemma-4-26b-a4b-it
+  Model Type: gemma4
+  Parameter Count: 26000000000
+  Accelerator Count: 4
+  Accelerator Type: NVIDIA_H200_141GB
+  Precision: PRECISION_UNSPECIFIED
+  Disable Deployment Size Validation: true
+  Enable Addons: false
+  Disable Speculative Decoding: true
+  Enable Session Affinity: true
+  Preset Type: MINIMAL
+Replica Stats:
+  Effective Replica Count: 0.00
+Hot Load Transition Type: HOT_LOAD_TRANSITION_TYPE_UNSPECIFIED

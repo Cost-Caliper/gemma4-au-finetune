@@ -1,0 +1,25 @@
+{
+  "tuned_v4_tools": {
+    "holdout": {
+      "n": 150,
+      "errors": 0,
+      "key_fact_coverage": 0.4955,
+      "judge_mean": 6.7,
+      "tool_call_rate": 0.92
+    },
+    "retention": {
+      "n": 60,
+      "errors": 0,
+      "key_fact_coverage": 0.5943,
+      "judge_mean": 7.37,
+      "tool_call_rate": 0.983
+    },
+    "code": {
+      "n": 40,
+      "errors": 0,
+      "key_fact_coverage": 0.5202,
+      "judge_mean": 3.32,
+      "tool_call_rate": 0.0
+    }
+  }
+}

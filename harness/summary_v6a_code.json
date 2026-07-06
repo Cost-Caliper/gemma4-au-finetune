@@ -1,0 +1,25 @@
+{
+  "v6a_code": {
+    "holdout": {
+      "n": 150,
+      "errors": 0,
+      "key_fact_coverage": 0.4883,
+      "judge_mean": 6.67,
+      "tool_call_rate": 0.94
+    },
+    "retention": {
+      "n": 60,
+      "errors": 0,
+      "key_fact_coverage": 0.6153,
+      "judge_mean": 7.38,
+      "tool_call_rate": 1.0
+    },
+    "code": {
+      "n": 40,
+      "errors": 0,
+      "key_fact_coverage": 0.4066,
+      "judge_mean": 2.38,
+      "tool_call_rate": 0.125
+    }
+  }
+}
